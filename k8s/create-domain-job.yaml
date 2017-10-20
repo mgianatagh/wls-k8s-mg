@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-domain-job
+spec:
+  template:
+    metadata:
+      labels:
+        app: create-domain-job
+    spec:
+      containers:
+        - name: create-domain-job
+          image: store/oracle/weblogic:12.2.1.2
+          ports:
+            - containerPort: 7001
+          volumeMounts:
+          - mountPath: /u01/test
+            name: pv-storage
+          command: ["/bin/sh"]
+          args: ["/u01/test/scripts/create-domain-job.sh"]
+      restartPolicy: Never
+      volumes:
+        - name: pv-storage
+          persistentVolumeClaim:
+            claimName: pv001-claim
