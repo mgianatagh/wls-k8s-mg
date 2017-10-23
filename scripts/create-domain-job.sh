@@ -6,7 +6,7 @@ export ADMIN_PORT=7001
 export PRODUCTION_MODE=prod
 
 # Create the domain
-wlst.sh -skipWLSModuleScanning /u01/test/scripts/create-domain.py
+wlst.sh -skipWLSModuleScanning /u01/weblogic/scripts/create-domain.py
 
 mkdir -p ${DOMAIN_HOME}/servers/AdminServer/security/
 echo "username=weblogic" > $DOMAIN_HOME/servers/AdminServer/security/boot.properties

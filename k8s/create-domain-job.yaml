@@ -14,10 +14,10 @@ spec:
           ports:
             - containerPort: 7001
           volumeMounts:
-          - mountPath: /u01/test
+          - mountPath: /u01/weblogic
             name: pv-storage
           command: ["/bin/sh"]
-          args: ["/u01/test/scripts/create-domain-job.sh"]
+          args: ["/u01/weblogic/scripts/create-domain-job.sh"]
       restartPolicy: Never
       volumes:
         - name: pv-storage

@@ -12,6 +12,7 @@ minikube dashboard
 Establish environment settings that are shared across steps.
 
 ```bash
+eval $(minikube docker-env)
 docker login
  
 export PVHOME=~/Downloads/weblogic-k8s-pv/
@@ -54,7 +55,7 @@ cp scripts/create-domain-job.sh $PVHOME/scripts
 Create a domain on the persistent volume that will be used by WebLogic.
 
 ```bash
-kubectl apply -f k8s/create-domain-job.yaml
+kubectl create -f k8s/create-domain-job.yaml
 ```
 
 

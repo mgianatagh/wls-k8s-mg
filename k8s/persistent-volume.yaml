@@ -10,4 +10,4 @@ spec:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Recycle
   hostPath:
-    path: /Users/mgianata/Downloads/weblogic-k8s-pv
+    path: "/Users/mgianata/Downloads/weblogic-k8s-pv"
