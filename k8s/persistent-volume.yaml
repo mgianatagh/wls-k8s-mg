@@ -8,6 +8,6 @@ spec:
     storage: 5Gi
   accessModes:
     - ReadWriteMany
-  persistentVolumeReclaimPolicy: Recycle
+  persistentVolumeReclaimPolicy: Retain
   hostPath:
-    path: "/Users/mgianata/Downloads/weblogic-k8s-pv"
+    path: "/wls-k8s-data"

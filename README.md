@@ -2,30 +2,67 @@
 My examples of using Oracle WebLogic in a Kubernetes environment
 
 # Startup Kubernetes
-Startup the Kubernetes environment and open the dashbaord in a browser.
+Startup the Kubernetes environment and open the dashboard in a browser.
 
 ```bash
 minikube start
 minikube dashboard
 ```
-# Environment Setup
-Establish environment settings that are shared across steps.
+
+# Pull the Docker image
+This step is only required after the initial creation of the local kubernetes cluster running in VirtualBox
+```bash
+eval $(minikube docker-env --shell=bash --no-proxy)
+docker login
+docker pull store/oracle/weblogic:12.2.1.2
+```
+
+# Create the Persistent Volume
+Create the base folder of the persistent volume
 
 ```bash
-eval $(minikube docker-env)
-docker login
+sudo -s
+cd /
+mkdir wls-k8s-data
+chmod -R 777 wls-k8s-data
+exit
  
-export PVHOME=~/Downloads/weblogic-k8s-pv/
+# Update minikube image in VirtualBox to mount  /wls-k8s-data
+/wls-k8s-data --> wls-k8s-data
+minikube ssh
+ls /wls-k8s-data
+exit
+ 
+# Restart minikube
+minikube stop
+minikube start
 ```
-# Persistent Volume
+# Change Permissions on Persistent Volume
+By default (at least on Mac OS) the folders that get created on the persistent volume (e.g. domains) are not writeable, even though the parent folder is set to 777.
 
+```bash
+minikube ssh
+sudo -s
+umount /wls-k8s-data
+mount -t vboxsf -o rw,dmode=777,fmode=777 wls-k8s-data /wls-k8s-data
+```
+
+# Populate the Persistent Volume
+Initialize the persistent volume with the scripts and applications that will be required.
+```bash
+export PVHOME=/wls-k8s-data
+ 
+# Create the scripts folder and populate it
+mkdir -p $PVHOME/scripts
+cp scripts/create-domain.py $PVHOME/scripts
+cp scripts/create-domain-job.sh $PVHOME/scripts
+```
+
+# Persistent Volume
 Create the persistent volume and a claim against that volume
 
 ```bash
-# Create the folder, the persistent volume, and a claim against it
-mkdir -p $PVHOME
-chmod -R 777 $PVHOME
-
+# Create the persistent volume, and a claim against it
 kubectl create -f k8s/persistent-volume.yaml
 kubectl create -f k8s/persistent-volume-claim.yaml
  
@@ -37,18 +74,6 @@ pv001     5Gi        RWX           Recycle         Bound     default/pv001-claim
 kubectl get pvc
 NAME          STATUS    VOLUME    CAPACITY   ACCESSMODES   STORAGECLASS   AGE
 pv001-claim   Bound     pv001     5Gi        RWX           weblogic       6s
-```
-
-# Populate the Persistent Volume
-Initialize the persistent volume with the scripts and applications that will be required.
-
-```bash
-# Create the folders
-mkdir -p $PVHOME/scripts
- 
-# Populate the scripts folder
-cp scripts/create-domain.py $PVHOME/scripts
-cp scripts/create-domain-job.sh $PVHOME/scripts
 ```
 
 # Create Domain
