@@ -75,14 +75,14 @@ cd('Servers/' + server_name3)
 set('ListenPort', managed_port3)
 set('ListenAddress', '')
 
-# Hammer.war deployment
-# cd('/')
-# create('Hammer', 'AppDeployment')
-# cd('/AppDeployments/Hammer/')
-# set('ModuleType', 'war')
-# set('StagingMode', 'nostage')
-# set('SourcePath', '/u01/hammer/apps/Hammer.war')
-# set('Target', server_name1 + ',' + server_name2 + ',' + server_name3)
+# wls-exporter.war deployment
+cd('/')
+create('wls-exporter', 'AppDeployment')
+cd('/AppDeployments/wls-exporter/')
+set('ModuleType', 'war')
+set('StagingMode', 'nostage')
+set('SourcePath', '/u01/weblogic/apps/wls-exporter.war')
+set('Target', 'AdminServer')
 
 # Write Domain
 # ============

@@ -58,6 +58,11 @@ mkdir -p -m 777 $PVHOME
 mkdir -p $PVHOME/scripts
 cp scripts/create-domain.py $PVHOME/scripts
 cp scripts/create-domain-job.sh $PVHOME/scripts
+cp scripts/start-domain.sh $PVHOME/scripts
+ 
+# Create the apps folder and populate it
+mkdir -p $PVHOME/apps
+cp apps/wls-exporter.war $PVHOME/apps
 ```
 
 # Persistent Volume
@@ -84,10 +89,16 @@ Create a domain on the persistent volume that will be used by WebLogic.
 ```bash
 kubectl create -f k8s/create-domain-job.yaml
 ```
+# Start WebLogic Domain
+```bash
+kubectl create -f k8s/start-domain.yaml
+```
+
 
 # Cleanup
 
 ```bash
+kubectl delete -f k8s/start-domain.yaml
 kubectl delete -f k8s/create-domain-job.yaml
 kubectl delete -f k8s/persistent-volume-claim.yaml
 kubectl delete -f k8s/persistent-volume.yaml

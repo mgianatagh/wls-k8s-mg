@@ -1,0 +1,97 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: admin-server
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        server: admin-server
+    spec:
+      hostname: admin-server
+      containers:
+        - name: admin-server
+          image: store/oracle/weblogic:12.2.1.2
+          ports:
+            - containerPort: 7001
+          volumeMounts:
+          - mountPath: /u01/weblogic
+            name: pv-storage
+          command: ["/bin/sh"]
+          args: ["/u01/weblogic/scripts/start-domain.sh"]
+      volumes:
+        - name: pv-storage
+          persistentVolumeClaim:
+            claimName: pv001-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: admin-server
+spec:
+  type: NodePort
+  selector:
+    server: admin-server
+  ports:
+    - port: 7001
+      nodePort: 30001
+---
+apiVersion:  apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: managed-server
+spec:
+  serviceName: base-domain
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        server: wls-server
+    spec:
+      containers:
+        - name: managed-server
+          image: store/oracle/weblogic:12.2.1.2
+          volumeMounts:
+            - mountPath: /u01/hammer
+              name: pv-storage
+          command: ["sh"]
+          args:
+          - "/u01/weblogic/domains/base_domain/bin/startManagedWebLogic.sh"
+          - "$(POD_NAME)"
+          - "http://admin-server:7001/"
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+      volumes:
+        - name: pv-storage
+          persistentVolumeClaim:
+            claimName: pv001-claim
+---
+apiVersion: v1 #Single Service corresponding all managed servers of domain
+kind: Service
+metadata:
+  name: wls-server
+spec:
+  type: NodePort
+  selector:
+    server: wls-server
+  ports:
+    - name: wls-server
+      port: 7003
+      nodePort: 30003
+---
+apiVersion: v1 # headless service required for statefulSets
+kind: Service
+metadata:
+  name: base-domain
+spec:
+  clusterIP: None
+  selector:
+    server: base-domain
+  ports:
+    - name: base-domain
+      port: 1234
+      targetPort: 1234
