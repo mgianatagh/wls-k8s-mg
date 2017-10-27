@@ -10,4 +10,4 @@ spec:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   hostPath:
-    path: "/wls-k8s-data"
+    path: "/wls-k8s-data/wls-k8s-mg"

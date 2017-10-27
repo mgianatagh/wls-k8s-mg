@@ -18,13 +18,12 @@ docker pull store/oracle/weblogic:12.2.1.2
 ```
 
 # Create the Persistent Volume
-Create the base folder of the persistent volume
+Create the base folder of the persistent volume.  This step is only required once.
 
 ```bash
 sudo -s
 cd /
-mkdir wls-k8s-data
-chmod -R 777 wls-k8s-data
+mkdir -m 777 wls-k8s-data
 exit
  
 # Update minikube image in VirtualBox to mount  /wls-k8s-data
@@ -43,14 +42,17 @@ By default (at least on Mac OS) the folders that get created on the persistent v
 ```bash
 minikube ssh
 sudo -s
-umount /wls-k8s-data
+umount /wls-k8s-data/
 mount -t vboxsf -o rw,dmode=777,fmode=777 wls-k8s-data /wls-k8s-data
+exit
+exit
 ```
 
 # Populate the Persistent Volume
 Initialize the persistent volume with the scripts and applications that will be required.
 ```bash
-export PVHOME=/wls-k8s-data
+export PVHOME=/wls-k8s-data/wls-k8s-mg
+mkdir -p -m 777 $PVHOME
  
 # Create the scripts folder and populate it
 mkdir -p $PVHOME/scripts
@@ -82,7 +84,6 @@ Create a domain on the persistent volume that will be used by WebLogic.
 ```bash
 kubectl create -f k8s/create-domain-job.yaml
 ```
-
 
 # Cleanup
 
