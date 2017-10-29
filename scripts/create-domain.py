@@ -3,13 +3,13 @@
 domain_name  = os.environ.get("DOMAIN_NAME")
 admin_port   = int(os.environ.get("ADMIN_PORT"))
 managed_port1 = int("7003")
-managed_port2 = int("7004")
-managed_port3 = int("7005")
+managed_port2 = int("7003")
+managed_port3 = int("7003")
 admin_pass   = "welcome1"
 domain_path  = os.environ.get("DOMAIN_HOME")
-server_name1  = "ms1"
-server_name2  = "ms2"
-server_name3  = "ms3"
+server_name1  = "managed-server-0"
+server_name2  = "managed-server-1"
+server_name3  = "managed-server-2"
 
 print('domain_name     : [%s]' % domain_name);
 print('admin_port      : [%s]' % admin_port);

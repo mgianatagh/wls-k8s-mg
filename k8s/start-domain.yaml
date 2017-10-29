@@ -53,7 +53,7 @@ spec:
         - name: managed-server
           image: store/oracle/weblogic:12.2.1.2
           volumeMounts:
-            - mountPath: /u01/hammer
+            - mountPath: /u01/weblogic
               name: pv-storage
           command: ["sh"]
           args:
