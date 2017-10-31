@@ -6,23 +6,16 @@ An example of how to deploy Promethues, Grafana & wls-exporter to a Kubernetes c
 
 ## Requirements
 
-- Kubernetes 1.8.1
-- Prometheus 1.7.1
+- prometheus 1.8.1
+- alertmanager 0.9.1
 - Grafana 4.4.3
 
 ## Example Files
 
 ### prometheus.yml
-- Creates a deployment of prometheus 1.7.1
+- Creates a deployment of prometheus 1.8.1
 - Creates a service named "prometheus" that exposes the deployment as an externel endpoint on port 9090
 - Defines the scraping configuration for prometheus.  The scraping definitions were taken from example files.
-
-### persistent-volume.yml
-This file is currently not used.  It contains the definition for a PersistentVolume and a PersistentVolumeClaim.
-
-It appears that our PersistentVolume storage will require NFS, and that support is not yet configures for our Kubernetes cluster.
-
-References to the storage defined in this file are currently commented out of prometheus-kubernetes.yml
 
 ### grafana-kubernetes.yml
 - Creates a deployment of grafana 4.4.3
@@ -43,7 +36,7 @@ minikube dashboard
 kubectl create -f wls-exporter/k8s/wls-admin.yml
 minikube service wls-admin-service --url
  
-# Show wls-exporter
+# Connect to wls-exporter in a browser to verify the service is running
 {wls-exporter-url}/wls-exporter
 ```
 
@@ -51,7 +44,7 @@ minikube service wls-admin-service --url
 ```bash
 kubectl create -f prometheus/prometheus.yml
  
-# Obtain the URL of prometheus service and open in browser
+# Obtain the URL of prometheus service and open in a browser
 minikube service prometheus --url
 ```
 ## Test the Deployment
@@ -65,7 +58,7 @@ You should see the Prometheus UI for Alerts, Graph, Status and Help.
 Click on the metrics pulldown and select 'wls_scrape_cpu_seconds' and click 'execute'
 
 ## Deploy Grafana
-```
+```bash
 kubectl create -f grafana-kubernetes.yml
 ```
 

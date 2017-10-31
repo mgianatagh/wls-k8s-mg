@@ -226,6 +226,19 @@ data:
         summary = "Prometheus reported over 5 DNS lookup failure",
         description = "The prometheus unit reported that it failed to query the DNS.  Look at the kube-dns to see if it is having any problems",
       }
+
+    #
+    # weblogic_servlet_execution_time_total
+    #
+    ALERT weblogic_servlet_execution_time_total
+      IF weblogic_servlet_execution_time_total > 5
+      FOR 1m
+      LABELS { service = "frontend" }
+      ANNOTATIONS {
+        summary = "Prometheus reported over 5 servlet execution total time",
+        description = "This is the alert for the metric weblogic_servlet_execution_time_total",
+      }
+
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -267,7 +280,6 @@ data:
 
       # All the above attributes are inherited by all child routes and can
       # overwritten on each.
-
 
       routes:
       # This routes performs a regular expression match on alert labels to
