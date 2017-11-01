@@ -4,22 +4,12 @@
 
 An example of how to deploy Promethues, Grafana & wls-exporter to a Kubernetes cluster
 
-## Requirements
+## Test Environment
 
+- minikube 0.23.0
 - prometheus 1.8.1
 - alertmanager 0.9.1
-- Grafana 4.4.3
-
-## Example Files
-
-### prometheus.yml
-- Creates a deployment of prometheus 1.8.1
-- Creates a service named "prometheus" that exposes the deployment as an externel endpoint on port 9090
-- Defines the scraping configuration for prometheus.  The scraping definitions were taken from example files.
-
-### grafana-kubernetes.yml
-- Creates a deployment of grafana 4.4.3
-- Creates a service named "grafana" that exposes the deployment as an external endpoint on port 3000
+- grafana 4.6.1
 
 ## Startup the Environment
 ```bash
@@ -30,6 +20,7 @@ cd wls-k8s-mg
 # Startup the Kubernetes cluster
 minikube start
 minikube dashboard
+eval $(minikube docker-env --shell=bash)
 ```
 ## Deploy wls-exporter
 ```bash
@@ -44,14 +35,15 @@ minikube service wls-admin-service --url
 ```bash
 kubectl create -f prometheus/prometheus.yml
  
-# Obtain the URL of prometheus service and open in a browser
+# Obtain the URL of prometheus service
 minikube service prometheus --url
+ 
+# Open prometheus in a browser
+minikube service prometheus
 ```
 ## Test the Deployment
 
-Obtain the external endpoint of the service.  This can be found under the "Services" section of the kubernetes dashboard.
-
-Click on the link to the external endpoint for the service named "prometheus".
+Obtain the external endpoint of the service and open it in a browser.
 
 You should see the Prometheus UI for Alerts, Graph, Status and Help.
 
@@ -59,20 +51,22 @@ Click on the metrics pulldown and select 'wls_scrape_cpu_seconds' and click 'exe
 
 ## Deploy Grafana
 ```bash
-kubectl create -f grafana-kubernetes.yml
+kubectl create -f prometheus/grafana.yml
+ 
+# Obtain the URL of grafana service
+minikube service grafana --url
+ 
+# Open grafana in a browser
+minikube service grafana
 ```
 
 ## Configure Grafana
-Obtain the external endpoint of the service.  This can be found under the "Services" section of the kubernetes dashboard.
-
-Click on the link to the external endpoint for the service named "grafana".
-
 Log into the service with username "admin" and password "pass".
 
 Click "Add Data Source" and then connect Grafana to Prometheus by entering:
 - Name:   Prometheus
 - Type:   Prometheus
-- Url:    http://prometheus:9090
+- Url:    {output of minikube service prometheus --url}
 - Access: Proxy
 
 Click "Add" to save the data source
@@ -91,6 +85,5 @@ Upload and import the file prometheus/grafana-config.json and select the data so
 ```bash
 kubectl delete -f wls-exporter/k8s/wls-admin.yml
 kubectl delete -f prometheus/prometheus.yml
- 
-kubectl delete -f grafana-kubernetes.yml
+kubectl delete -f prometheus/grafana.yml
 ```
