@@ -83,7 +83,7 @@ Upload and import the file prometheus/grafana-config.json and select the data so
 ## Cleanup
 
 ```bash
-kubectl delete -f wls-exporter/k8s/wls-admin.yml
-kubectl delete -f prometheus/prometheus.yml
 kubectl delete -f prometheus/grafana.yml
+kubectl delete -f prometheus/prometheus.yml
+kubectl delete -f wls-exporter/k8s/wls-admin.yml
 ```
