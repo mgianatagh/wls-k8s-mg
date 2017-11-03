@@ -1,0 +1,18 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: wls-ingress
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /console
+        backend:
+          serviceName: admin-server-1
+          servicePort: 7001
+      - path: /console
+        backend:
+          serviceName: admin-server-2
+          servicePort: 7001

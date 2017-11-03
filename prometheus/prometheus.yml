@@ -311,8 +311,8 @@ data:
     - name: 'slack_chatbots'
       slack_configs:
       - send_resolved: true
-        api_url: 'https://hooks.slack.com/services/xxxxxxx'
-        channel: '#chatbots'
+        api_url: 'https://proddev-odx.slack.com/messages/C7T550QBT'
+        channel: '#mg-test-public'
         text: >-
 
               Summary:
