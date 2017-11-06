@@ -33,6 +33,10 @@ minikube service wls-admin-service --url
 
 ## Deploy Prometheus
 ```bash
+# Creates ClusterRole/ClusterRoleBinding and ServiceAccount for Prometheus use
+kubectl create -f prometheus/prometheus-rbac.yml
+ 
+# Depoy prometheus
 kubectl create -f prometheus/prometheus.yml
  
 # Obtain the URL of prometheus service
@@ -85,5 +89,6 @@ Upload and import the file prometheus/grafana-config.json and select the data so
 ```bash
 kubectl delete -f prometheus/grafana.yml
 kubectl delete -f prometheus/prometheus.yml
+kubectl delete -f prometheus/prometheus-rbac.yml
 kubectl delete -f wls-exporter/k8s/wls-admin.yml
 ```
